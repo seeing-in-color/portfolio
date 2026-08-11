@@ -22,88 +22,118 @@
     />
     <meta property="og:image" content="/assets/og.svg" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#06070a" />
 
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307080a'/%3E%3Cpath d='M8 22 L16 9 L24 22' stroke='%23ff9d5c' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M11.5 18 h9' stroke='%235fe0b0' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2306070a'/%3E%3Cpath d='M8 22 L16 9 L24 22' stroke='%23ff9e62' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M11.5 18 h9' stroke='%2362e6b4' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E"
     />
     <link rel="stylesheet" href="/assets/styles.css" />
   </head>
   <body>
     <a class="skip" href="#work">Skip to work</a>
 
+    <!-- ambient backdrop: drifting colour fields + fine grain -->
+    <div class="field" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- scroll progress -->
+    <div class="rail" aria-hidden="true"><i id="rail"></i></div>
+
     <!-- ============================================================ nav -->
     <header class="nav" id="nav">
+      <div class="nav__shell" aria-hidden="true"></div>
       <div class="wrap nav__inner">
         <a class="nav__mark" href="#top">
-          <i class="nav__dot" aria-hidden="true"></i>
+          <i class="pulse" aria-hidden="true"></i>
           Andres Taquechel
         </a>
         <nav class="nav__links" aria-label="Sections">
           <a href="#work">Work</a>
           <a href="#approach">Approach</a>
           <a href="#ask">Ask AI</a>
-          <a href="#contact">Contact</a>
+          <a href="#book">Book a call</a>
         </nav>
         <button
-          class="theme-btn"
+          class="icon-btn"
           id="theme"
           type="button"
           aria-label="Toggle colour theme"
         >
-          <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
         </button>
       </div>
     </header>
 
-    <!-- =========================================================== hero -->
     <main id="top">
+      <!-- ========================================================= hero -->
       <section class="hero">
-        <div class="hero__grid" aria-hidden="true"></div>
-        <div class="wrap">
-          <div class="hero__eyebrow">
-            <i aria-hidden="true"></i>
-            <span class="mono">Open to AI operations roles</span>
-          </div>
-          <h1>
-            I turn manual business processes into
-            <em>AI systems that run in production.</em>
-          </h1>
-          <p class="hero__pitch" id="pitch"></p>
+        <div class="wrap hero__grid">
+          <div>
+            <div class="tag">
+              <i class="pulse" aria-hidden="true"></i>
+              <span class="mono">Open to AI operations roles</span>
+            </div>
+            <h1 id="headline">
+              I turn manual business processes into
+              <span class="grad">AI systems that run in production.</span>
+            </h1>
+            <p class="hero__pitch" id="pitch"></p>
 
-          <div class="hero__meta">
-            <span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Austin, TX
-            </span>
-            <span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
-              AI Operations Specialist @ Living Security
-            </span>
+            <div class="hero__meta">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Austin, TX
+              </span>
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+                AI Operations Specialist @ Living Security
+              </span>
+            </div>
+
+            <div class="cta-row">
+              <a class="btn btn--primary" href="#work">
+                <span>See the work</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a class="btn" href="#ask">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>Ask AI about me</span>
+              </a>
+              <a class="btn" id="cta-resume" href="/resume.pdf">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                <span>Résumé</span>
+              </a>
+            </div>
           </div>
 
-          <div class="cta-row">
-            <a class="btn btn--primary" href="#work">
-              See the work
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-            <a class="btn" href="#ask">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              Ask AI about me
-            </a>
-            <a class="btn" id="cta-resume" href="/resume.pdf">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-              Résumé
-            </a>
-          </div>
+          <aside class="sig reveal">
+            <p class="sig__q">
+              “The work I'm proudest of isn't the automation that worked — it's
+              the one I killed. Full auto-apply worked, and I scrapped it,
+              because it violated platform terms.”
+            </p>
+            <p class="sig__who">On judgment over cleverness</p>
+            <div class="sig__rule"></div>
+            <div class="sig__row">
+              <div><b>6 yrs</b>Ops &amp; automation</div>
+              <div><b>2026</b>Current at Living Security</div>
+            </div>
+          </aside>
         </div>
       </section>
 
+      <!-- ====================================================== marquee -->
+      <section class="band" aria-label="Systems integrated">
+        <p class="mono band__label">Systems I've wired together</p>
+        <div class="marquee" id="marquee" aria-hidden="true"></div>
+      </section>
+
       <!-- ======================================================== stats -->
-      <section class="stats" aria-label="Key numbers">
+      <section class="section" aria-label="Key numbers" style="padding-block: clamp(2rem, 5vw, 4rem)">
         <div class="wrap">
-          <div class="stats__grid" id="stats"></div>
+          <div class="stats__grid reveal" id="stats"></div>
         </div>
       </section>
 
@@ -139,7 +169,7 @@
             <p class="mono">How I work</p>
             <h2>Six things I do on every build</h2>
             <p>
-              The patterns below show up in almost every project on this page.
+              These patterns show up in almost every project on this page.
               They're also the reason the ones that shipped are still running.
             </p>
           </div>
@@ -154,15 +184,15 @@
             <p class="mono">Ask AI about Andres</p>
             <h2>Interview the portfolio directly</h2>
             <p>
-              This is a Claude-powered assistant with the full detail of every
-              project on this page. Ask what I've built with a specific system,
-              how I'd approach a problem, or what I'd do in your role.
+              A Claude-powered assistant with the full detail of every project
+              here. Ask what I've built with a specific system, how I'd approach
+              a problem, or what I'd do in your role.
             </p>
           </div>
 
           <div class="chat reveal" id="chat">
             <div class="chat__head">
-              <i aria-hidden="true"></i>
+              <i class="pulse" aria-hidden="true"></i>
               <b>Portfolio assistant</b>
               <span>Claude</span>
             </div>
@@ -192,7 +222,7 @@
       <section class="section contact" id="contact">
         <div class="wrap contact__inner">
           <div class="reveal">
-            <p class="mono" style="margin-bottom: 1rem">Get in touch</p>
+            <p class="mono" style="margin-bottom: 1.2rem">Get in touch</p>
             <h2>Looking for someone to own AI operations?</h2>
             <p>
               I'm most useful where there's real manual work to remove and real
@@ -201,6 +231,37 @@
             </p>
           </div>
           <div class="contact__links reveal" id="contact-links"></div>
+        </div>
+      </section>
+
+      <!-- ====================================================== booking -->
+      <section class="section book" id="book">
+        <div class="wrap book__inner">
+          <div class="reveal">
+            <p class="mono" style="margin-bottom: 1.2rem">Book a call</p>
+            <h2 style="font-size: clamp(1.9rem, 4.4vw, 2.9rem)">
+              Grab a slot that works for you
+            </h2>
+            <p style="color: var(--text-dim); max-width: 44ch; margin-top: 1rem">
+              Grab a slot, or email me and we'll find something that works —
+              either way, no long back-and-forth.
+            </p>
+            <div class="book__list">
+              <div>
+                <b>Bring a real problem</b>
+                <span>The manual process you'd most like to see gone.</span>
+              </div>
+              <div>
+                <b>I'll be specific</b>
+                <span>Including where I think AI is the wrong tool.</span>
+              </div>
+              <div>
+                <b>Austin / Central time</b>
+                <span>Flexible for other time zones.</span>
+              </div>
+            </div>
+          </div>
+          <div class="book__frame reveal" id="book-frame"></div>
         </div>
       </section>
     </main>

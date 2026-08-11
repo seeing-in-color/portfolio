@@ -1,4 +1,11 @@
-import { PROFILE, STATS, FILTERS, PROJECTS, APPROACH } from "./data.js";
+import {
+  PROFILE,
+  STATS,
+  FILTERS,
+  PROJECTS,
+  APPROACH,
+  SYSTEMS,
+} from "./data.js";
 
 /* ------------------------------------------------------------- helpers --- */
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -83,6 +90,95 @@ const watchReveals = (root = document) => {
 $("#pitch").textContent = PROFILE.pitch;
 $("#year").textContent = new Date().getFullYear();
 $("#cta-resume").href = PROFILE.resume;
+
+/* --------------------------------------------------------- scroll rail --- */
+(() => {
+  const bar = $("#rail");
+  let queued = false;
+  const paint = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.setProperty("--p", max > 0 ? window.scrollY / max : 0);
+    queued = false;
+  };
+  addEventListener(
+    "scroll",
+    () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    },
+    { passive: true }
+  );
+  paint();
+})();
+
+/* ---------------------------------------------------- headline entrance --- */
+/* Wrap each word so it can rise independently. Done in JS so the markup
+ * stays readable and the heading is a normal <h1> to crawlers. */
+(() => {
+  const h1 = $("#headline");
+  if (!canAnimate) return;
+
+  const wrapWords = (node) => {
+    for (const child of [...node.childNodes]) {
+      if (child.nodeType === Node.ELEMENT_NODE) {
+        wrapWords(child);
+      } else if (child.nodeType === Node.TEXT_NODE && child.textContent.trim()) {
+        const frag = document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach((piece) => {
+          if (!piece.trim()) return frag.append(piece);
+          const w = el("span", "w");
+          w.textContent = piece;
+          frag.append(w);
+        });
+        child.replaceWith(frag);
+      }
+    }
+  };
+  wrapWords(h1);
+
+  const words = [...h1.querySelectorAll(".w")];
+  words.forEach((w, i) => {
+    w.style.transitionDelay = reduceMotion ? "0s" : `${60 + i * 34}ms`;
+  });
+
+  /* A timer, not requestAnimationFrame: rAF is suspended in background tabs,
+   * so a page opened in one would render the headline permanently invisible.
+   * Timers still fire (throttled), so the reveal always lands. */
+  setTimeout(() => h1.classList.add("is-in"), 60);
+})();
+
+/* ------------------------------------------------------------- marquee --- */
+(() => {
+  const host = $("#marquee");
+  if (!host || !SYSTEMS?.length) return;
+  // Two identical lists so the -50% translate loops seamlessly.
+  const list = () => {
+    const ul = document.createElement("ul");
+    ul.innerHTML = SYSTEMS.map((s) => `<li>${s}</li>`).join("");
+    return ul;
+  };
+  host.append(list(), list());
+})();
+
+/* ------------------------------------------------- cursor-tracked glow --- */
+/* Writes --mx/--my as percentages so CSS can place a radial highlight under
+ * the pointer. Skipped on touch, where there is no hover to track. */
+(() => {
+  if (!window.matchMedia("(hover: hover)").matches) return;
+  const selector = ".card, .btn";
+  addEventListener(
+    "pointermove",
+    (e) => {
+      const target = e.target.closest?.(selector);
+      if (!target) return;
+      const r = target.getBoundingClientRect();
+      target.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+      target.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+    },
+    { passive: true }
+  );
+})();
 
 /* --------------------------------------------------------------- stats --- */
 (() => {
@@ -297,7 +393,7 @@ function openSheet(id, trigger) {
 
     <h4>Stack</h4>
     <div class="tags">${p.stack
-      .map((s) => `<span class="tag">${s}</span>`)
+      .map((s) => `<span class="tag-pill">${s}</span>`)
       .join("")}</div>`;
 
   $("[data-pipe]", sheetBody).replaceWith(buildPipeline(p.pipeline));
@@ -386,6 +482,55 @@ sheet.addEventListener("keydown", (e) => {
       <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
     host.append(a);
   });
+})();
+
+/* ------------------------------------------------------------- booking --- */
+/* Embeds the Google Calendar appointment schedule when PROFILE.bookingEmbed
+ * is set. If it's blank — or the iframe fails to load — a styled card takes
+ * its place, so the section never renders as a broken white box. */
+(() => {
+  const host = $("#book-frame");
+  if (!host) return;
+
+  const fallback = (note) => {
+    host.innerHTML = `
+      <div class="book__fallback">
+        <p class="mono">${note}</p>
+        <h3>Let's find a time</h3>
+        <p>
+          Email me with a couple of windows that work and I'll confirm within
+          the day. I'm in Central time but flexible.
+        </p>
+        <a class="btn btn--primary" href="mailto:${PROFILE.email}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+          <span>${PROFILE.email}</span>
+        </a>
+        <a class="btn" href="${PROFILE.booking}" target="_blank" rel="noopener noreferrer">
+          <span>Open my calendar</span>
+          ${ICON.arrow}
+        </a>
+      </div>`;
+  };
+
+  const url = (PROFILE.bookingEmbed ?? "").trim();
+  if (!url) return fallback("Scheduling link");
+
+  const frame = document.createElement("iframe");
+  frame.src = url;
+  frame.title = "Book a call with Andres Taquechel";
+  frame.loading = "lazy";
+  frame.setAttribute("frameborder", "0");
+
+  // Google's embed doesn't report load errors cross-origin, so treat "never
+  // fired onload" as a failure and swap in the fallback.
+  let loaded = false;
+  frame.addEventListener("load", () => (loaded = true));
+  frame.addEventListener("error", () => fallback("Calendar unavailable"));
+  setTimeout(() => {
+    if (!loaded) fallback("Calendar unavailable");
+  }, 6000);
+
+  host.append(frame);
 })();
 
 /* ---------------------------------------------------------------- chat --- */

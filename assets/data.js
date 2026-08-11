@@ -18,7 +18,46 @@ export const PROFILE = {
   linkedin: "https://www.linkedin.com/in/andrestaquechel/",
   booking: "https://calendar.app.google/",
   resume: "/resume.pdf",
+
+  /*
+   * Google Calendar appointment-schedule embed.
+   *
+   * TO ENABLE: open your booking page in Google Calendar, copy the share link,
+   * and paste the full URL here with `?gv=true` on the end. It looks like:
+   *   https://calendar.google.com/calendar/appointments/schedules/AcZssZ...?gv=true
+   *
+   * While this is empty (or if the iframe fails to load) the booking section
+   * falls back to a styled card linking out to `booking` above — so the page
+   * never shows a broken embed.
+   */
+  bookingEmbed: "",
 };
+
+/* Marquee band under the hero. Names only — no logos, nothing to license. */
+export const SYSTEMS = [
+  "Claude API",
+  "Slack",
+  "HubSpot",
+  "Jira",
+  "Linear",
+  "Pylon",
+  "Guru",
+  "Gmail",
+  "Google Drive",
+  "Contentful",
+  "Notion",
+  "Telegram",
+  "Stripe",
+  "Twilio",
+  "Supabase",
+  "Playwright",
+  "Browserbase",
+  "Vercel",
+  "GitHub Actions",
+  "Canvas LMS",
+  "GoHighLevel",
+  "PostgreSQL",
+];
 
 export const STATS = [
   {
@@ -215,7 +254,7 @@ export const PROJECTS = [
     subtitle: "Constrained LLM extraction with a validation gate",
     org: "Living Security",
     year: "2026",
-    featured: true,
+    featured: false,
     tags: ["work", "agents"],
     blurb:
       "Read the captions of 362 training videos against a fixed 79-value taxonomy and proposed 941 tag corrections — with zero invented values.",
@@ -255,7 +294,7 @@ export const PROJECTS = [
     subtitle: "Replacing paid Zaps with owned, tested serverless code",
     org: "Living Security",
     year: "2026",
-    featured: true,
+    featured: false,
     tags: ["work", "integration"],
     blurb:
       "Two zero-dependency serverless endpoints that route support tickets into Jira and Linear by type, with signature verification and dedup informed by real production misfires.",
@@ -466,7 +505,7 @@ export const PROJECTS = [
     subtitle: "The same problem attacked three times, each with a better handle on the constraint",
     org: "Personal",
     year: "2026",
-    featured: true,
+    featured: false,
     tags: ["personal", "agents"],
     blurb:
       "A progression: LLM-first triage on cloud infrastructure, then re-engineered to run free inside Google's platform limits, then rethought as a layered cascade where the model only sees the ambiguous middle.",
@@ -514,7 +553,7 @@ export const PROJECTS = [
     subtitle: "A knowledge bot for drivers and a payout audit that found real money",
     org: "Swoop Franchise LLC",
     year: "2026",
-    featured: true,
+    featured: false,
     tags: ["personal", "agents", "integration"],
     blurb:
       "A Telegram bot that answers fleet questions in plain English, plus a weekly reconciliation that checks the platform's payout math against the contract across three markets.",

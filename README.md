@@ -59,10 +59,36 @@ The key is never committed — see `.env.example`.
 `cname.vercel-dns.com` with **proxy disabled (grey cloud)**. The proxy has to
 stay off or Vercel can't issue the TLS certificate.
 
+## Booking embed
+
+The bottom section embeds a Google Calendar appointment schedule. It is **off
+until you paste your link in** — set `PROFILE.bookingEmbed` in
+`assets/data.js`:
+
+1. Open your booking page in Google Calendar and copy the share link.
+2. Paste it into `bookingEmbed` with `?gv=true` appended.
+
+Until then (or if the iframe fails to load within 6 seconds) the section shows
+a styled card with your email and a link out to the calendar, so it never
+renders as a broken white box.
+
 ## Design notes
 
 - **Dark is the default**, light is a full theme rather than a tint. The toggle
   persists to `localStorage`; with no stored preference the OS setting wins.
+- **Nothing is boxed in.** Surfaces are gradients plus a hairline top edge and
+  soft shadow — no 1px card outlines. Radii start at 20px; controls are pills.
+- **The ambient backdrop** is three slow-drifting radial fields plus fine
+  grain, animating `transform`/`opacity` only so it stays on the compositor.
+- **Cards track the cursor**: `--mx`/`--my` are written on `pointermove` and
+  CSS places a radial highlight under the pointer. Skipped on touch.
+- **The headline reveal uses a timer, not `requestAnimationFrame`.** rAF is
+  suspended in background tabs, so a page opened in one would render the
+  headline permanently invisible.
+- **The marquee fades via `mask-image`**, not an overlaid gradient — an opaque
+  fade would block the glow behind it and read as a flat dark rectangle.
+- **The project grid uses `grid-auto-flow: dense`** because featured cards span
+  two tracks and would otherwise leave unfillable holes beside them.
 - **Scroll animations are gated behind a `js` class** set on `<html>` at
   runtime. If scripting or `IntersectionObserver` is unavailable, the hidden
   state is never applied and everything renders visible. A portfolio that
