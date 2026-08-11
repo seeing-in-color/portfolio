@@ -854,32 +854,32 @@ export const PROJECTS = [
 export const APPROACH = [
   {
     step: "01",
-    title: "Find the real manual work",
-    body: "Not the work people complain about — the work they've stopped noticing. It's usually someone re-typing the same data into a second system, or a judgment call being made from memory because the data is too annoying to look up.",
+    title: "Start with friction",
+    body: "Find the repeated task, delayed decision, or handoff costing people time.",
   },
   {
     step: "02",
-    title: "Measure before building",
-    body: "The support AI project started as an audit, not a pipeline. Reading 90 days of real conversations is what told me the knowledge base was the constraint — and gave me a baseline to grade the fix against afterwards.",
+    title: "Baseline first",
+    body: "Measure the current process so the fix can prove itself.",
   },
   {
     step: "03",
-    title: "Put it where people already are",
-    body: "Almost none of my work has its own UI. It lives in Slack, in Telegram, in the inbox, in the CRM. Adoption problems are usually interface problems, and the interface people already have is the one that wins.",
+    title: "Build inside the workflow",
+    body: "Ship in Slack, email, or the CRM—not another tool people must remember.",
   },
   {
     step: "04",
-    title: "Make the model's job small",
-    body: "Deterministic layers first, model last, and constrained when it runs. Fixed vocabularies, required evidence, confidence thresholds, validation gates that drop anything unreal. The taxonomy audit invented zero values out of 812 because the gate wouldn't let it.",
+    title: "Constrain the AI",
+    body: "Use rules, evidence, and validation before trusting model output.",
   },
   {
     step: "05",
-    title: "Assume it will break",
-    body: "Idempotent syncs keyed on content hash. Dedup that fails open so a hiccup never swallows real work. Safety gates that hard-skip rather than guess before anything irreversible. Health endpoints that report the deployed commit.",
+    title: "Design for failure",
+    body: "Make every run resumable, deduplicated, observable, and safe.",
   },
   {
     step: "06",
-    title: "Keep the human where it counts",
-    body: "Confidence-scored proposals behind an approval queue. Draft-only output. Scopes that structurally cannot delete. I've also killed my own features on these grounds — full auto-apply worked, and I scrapped it.",
+    title: "Keep human control",
+    body: "Require review when confidence, risk, or reversibility matters.",
   },
 ];
