@@ -292,6 +292,28 @@ function buildPipeline(steps) {
 /* --------------------------------------------------------------- cards --- */
 const grid = $("#grid");
 let active = "all";
+let projectView = "highlights";
+
+function indexFor(p, index) {
+  const row = el("button", "project-row");
+  row.type = "button";
+  row.dataset.id = p.id;
+  row.setAttribute("aria-haspopup", "dialog");
+
+  const proof = p.metrics?.[0];
+  row.innerHTML = `
+    <span class="project-row__num">${String(index + 1).padStart(2, "0")}</span>
+    <span class="project-row__main">
+      <span class="project-row__meta">${p.org} · ${p.year}</span>
+      <strong>${p.title}</strong>
+      <span class="project-row__summary">${p.subtitle}</span>
+    </span>
+    ${proof ? `<span class="project-row__proof"><b>${proof.value}</b><span>${proof.label}</span></span>` : ""}
+    <span class="project-row__open" aria-hidden="true">${ICON.arrow}</span>`;
+
+  row.addEventListener("click", () => openSheet(p.id, row));
+  return row;
+}
 
 function cardFor(p) {
   const card = el("button", "card" + (p.featured ? " card--featured" : ""));
@@ -313,9 +335,8 @@ function cardFor(p) {
     </div>
     <h3>${p.title}</h3>
     <p class="card__sub">${p.subtitle}</p>
-    <p class="card__blurb">${p.blurb}</p>
     <div class="card__metrics">${metrics}</div>
-    <span class="card__open">Read the case study ${ICON.arrow}</span>`;
+    <span class="card__open">See how it works ${ICON.arrow}</span>`;
 
   card.addEventListener("click", () => openSheet(p.id, card));
   return card;
@@ -323,14 +344,19 @@ function cardFor(p) {
 
 function render() {
   grid.innerHTML = "";
-  const list = PROJECTS.filter(
-    (p) => active === "all" || p.tags.includes(active)
-  );
-  list.forEach((p) => grid.append(cardFor(p)));
+  const isHighlights = projectView === "highlights";
+  const list = isHighlights
+    ? PROJECTS.filter((p) => p.featured)
+    : PROJECTS.filter((p) => active === "all" || p.tags.includes(active));
+
+  grid.className = `grid ${isHighlights ? "grid--index" : "grid--cards"}`;
+  list.forEach((p, i) => grid.append(isHighlights ? indexFor(p, i) : cardFor(p)));
 
   const label = FILTERS.find((f) => f.id === active).label;
   $("#count").innerHTML =
-    active === "all"
+    isHighlights
+      ? `${list.length} selected projects`
+      : active === "all"
       ? `${list.length} projects`
       : `${list.length} project${list.length === 1 ? "" : "s"} in <strong>${label}</strong>`;
 }
@@ -350,6 +376,22 @@ function render() {
       render();
     });
     host.append(b);
+  });
+
+  const viewButtons = [...document.querySelectorAll("[data-view]")];
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      projectView = button.dataset.view;
+      viewButtons.forEach((item) =>
+        item.setAttribute("aria-pressed", String(item === button))
+      );
+      host.hidden = projectView !== "grid";
+      $("#view-note").textContent =
+        projectView === "highlights"
+          ? "The strongest six, selected for range and results."
+          : "All 18 projects. Filter by the kind of work you care about.";
+      render();
+    });
   });
   render();
 })();

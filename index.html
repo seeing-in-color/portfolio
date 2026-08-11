@@ -142,13 +142,23 @@
         <div class="wrap">
           <div class="section__head reveal">
             <p class="mono">Selected work</p>
-            <h2>Systems that shipped, and what they actually changed</h2>
+            <h2>Useful AI systems, already doing the work</h2>
             <p>
-              Work automations are described as anonymized case studies — real
-              problems, real architecture, no customer names or internal
-              screenshots. Open any card for the pipeline, the approach, and the
-              honest status.
+              Six examples show the range. Each starts with the result; open one
+              only if you want the technical detail.
             </p>
+          </div>
+
+          <div class="work-toolbar reveal">
+            <div class="view-toggle" role="group" aria-label="Project view">
+              <button class="view-toggle__button" type="button" data-view="highlights" aria-pressed="true">
+                Highlights <span>6</span>
+              </button>
+              <button class="view-toggle__button" type="button" data-view="grid" aria-pressed="false">
+                Grid view <span>18</span>
+              </button>
+            </div>
+            <p class="view-note" id="view-note">The strongest six, selected for range and results.</p>
           </div>
 
           <div
@@ -156,9 +166,10 @@
             id="filters"
             role="group"
             aria-label="Filter projects"
+            hidden
           ></div>
           <p class="filter-count" id="count" aria-live="polite"></p>
-          <div class="grid" id="grid"></div>
+          <div class="grid grid--index" id="grid"></div>
         </div>
       </section>
 

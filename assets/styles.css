@@ -908,6 +908,64 @@ iframe {
 }
 
 /* ------------------------------------------------------------ filter --- */
+.work-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.view-toggle {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.28rem;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--edge);
+}
+
+.view-toggle__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.62rem 1rem;
+  border-radius: 999px;
+  color: var(--text-faint);
+  font-size: 0.86rem;
+  font-weight: 580;
+  transition: color 0.25s var(--ease), background 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.view-toggle__button span {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  opacity: 0.72;
+}
+
+.view-toggle__button[aria-pressed="true"] {
+  color: var(--text);
+  background: var(--surface-hi);
+  box-shadow: var(--lift);
+}
+
+.view-note {
+  color: var(--text-faint);
+  font-size: 0.86rem;
+  text-align: right;
+}
+
+@media (max-width: 680px) {
+  .work-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .view-note {
+    text-align: left;
+  }
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -952,8 +1010,16 @@ iframe {
   font-variant-numeric: tabular-nums;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 /* ------------------------------------------------------------- cards --- */
 .grid {
+  width: 100%;
+}
+
+.grid--cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
   gap: clamp(0.9rem, 2vw, 1.4rem);
@@ -961,6 +1027,118 @@ iframe {
      leaves an unfillable hole beside it. Dense lets single-width cards
      backfill those gaps. */
   grid-auto-flow: dense;
+}
+
+.grid--index {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.project-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr) minmax(120px, 0.28fr) 1.6rem;
+  align-items: center;
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+  width: 100%;
+  padding: clamp(1.15rem, 2.2vw, 1.65rem);
+  border-radius: var(--r-sm);
+  background: linear-gradient(110deg, var(--surface-hi), var(--surface));
+  text-align: left;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease), background 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+
+.project-row::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--edge), transparent);
+}
+
+.project-row:hover,
+.project-row:focus-visible {
+  transform: translateX(5px);
+  background: linear-gradient(110deg, var(--surface-hi), var(--accent-wash));
+  box-shadow: var(--lift);
+}
+
+.project-row__num,
+.project-row__meta {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.project-row__num {
+  color: var(--accent);
+}
+
+.project-row__main {
+  display: grid;
+  gap: 0.24rem;
+}
+
+.project-row__meta {
+  color: var(--text-faint);
+}
+
+.project-row__main strong {
+  color: var(--text);
+  font-size: clamp(1.05rem, 1.8vw, 1.28rem);
+  letter-spacing: -0.025em;
+}
+
+.project-row__summary {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.project-row__proof {
+  display: grid;
+  gap: 0.14rem;
+}
+
+.project-row__proof b {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+}
+
+.project-row__proof span {
+  color: var(--text-faint);
+  font-size: 0.72rem;
+}
+
+.project-row__open svg {
+  width: 1rem;
+  color: var(--accent);
+  transition: transform 0.3s var(--ease);
+}
+
+.project-row:hover .project-row__open svg {
+  transform: translateX(4px);
+}
+
+@media (max-width: 720px) {
+  .project-row {
+    grid-template-columns: 1.6rem minmax(0, 1fr) 1.2rem;
+  }
+  .project-row__proof {
+    grid-column: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+  }
+  .project-row__open {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
 }
 
 .card {

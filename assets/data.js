@@ -106,7 +106,7 @@ export const PROJECTS = [
   {
     id: "box-studio",
     title: "Box Studio",
-    subtitle: "AI content factory for monthly security-awareness campaigns",
+    subtitle: "Turns one Slack request into a complete, cited campaign and branded deck.",
     org: "Living Security",
     year: "2026",
     featured: true,
@@ -157,7 +157,7 @@ export const PROJECTS = [
   {
     id: "support-knowledge",
     title: "Support AI Knowledge Pipeline",
-    subtitle: "Audited a support AI, then built the pipeline that fixed it",
+    subtitle: "Gave a support AI the knowledge it was missing, then measured the change.",
     org: "Living Security",
     year: "2026",
     featured: true,
@@ -207,7 +207,7 @@ export const PROJECTS = [
   {
     id: "offboarding-robot",
     title: "Customer Offboarding Robot",
-    subtitle: "Destructive automation with safety gates that actually hold",
+    subtitle: "Offboards customers across four products from one safe, auditable trigger.",
     org: "Living Security",
     year: "2026",
     featured: true,
@@ -337,7 +337,7 @@ export const PROJECTS = [
   {
     id: "project-pulse",
     title: "Project Pulse",
-    subtitle: "A messy doc becomes a structured, approvable dashboard",
+    subtitle: "Turns a messy planning doc into clear projects, tasks, and approvals.",
     org: "Living Security",
     year: "2026",
     featured: true,
@@ -422,7 +422,7 @@ export const PROJECTS = [
   {
     id: "vehicle-finder",
     title: "Vehicle Finder",
-    subtitle: "Vision-graded fleet sourcing, where the LLM is the scheduler",
+    subtitle: "Checks van listings twice a day and uses photos to reject bad matches.",
     org: "Personal · Swoop",
     year: "2026",
     featured: true,
@@ -462,7 +462,7 @@ export const PROJECTS = [
   {
     id: "self-repairing-publisher",
     title: "Self-Repairing Publisher",
-    subtitle: "An automation that fixes its own broken selectors",
+    subtitle: "Publishes from Notion and repairs itself when the target site changes.",
     org: "Personal",
     year: "2026",
     featured: true,
