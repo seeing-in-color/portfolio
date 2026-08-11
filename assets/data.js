@@ -15,7 +15,7 @@ export const PROFILE = {
   pitch:
     "I find the manual work buried inside a business and replace it with AI systems that run in production — inside the tools people already use.",
   email: "dretaq@gmail.com",
-  linkedin: "https://www.linkedin.com/in/andrestaquechel/",
+  linkedin: "https://www.linkedin.com/in/andres-taquechel/",
   resume: "/resume.pdf",
 
   /*
