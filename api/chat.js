@@ -1,5 +1,3 @@
-import Anthropic from "@anthropic-ai/sdk";
-
 export const config = { runtime: "edge" };
 
 /*
@@ -345,34 +343,79 @@ export default async function handler(req) {
   while (messages.length && messages[0].role !== "user") messages.shift();
   if (!messages.length) return new Response("No question.", { status: 400 });
 
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
   try {
-    const stream = client.messages.stream({
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
-      // Low effort keeps a chat widget responsive; thinking stays on by default.
-      output_config: { effort: "low" },
-      system: [
-        { type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } },
-      ],
-      messages,
+    const upstream = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        stream: true,
+        system: [
+          { type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } },
+        ],
+        messages,
+      }),
     });
+
+    if (!upstream.ok || !upstream.body) {
+      const detail = await upstream.text();
+      console.error("chat request failed:", upstream.status, detail);
+      const status = upstream.status === 429 ? 429 : 502;
+      return new Response("The assistant is unavailable right now.", { status });
+    }
 
     const encoder = new TextEncoder();
     const body = new ReadableStream({
       async start(controller) {
-        try {
-          for await (const event of stream) {
-            if (
-              event.type === "content_block_delta" &&
-              event.delta.type === "text_delta"
-            ) {
-              controller.enqueue(encoder.encode(event.delta.text));
-            }
+        const reader = upstream.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        let refused = false;
+
+        const processEvent = (event) => {
+          const dataLine = event
+            .split("\n")
+            .find((line) => line.startsWith("data: "));
+          if (!dataLine) return;
+
+          let data;
+          try {
+            data = JSON.parse(dataLine.slice(6));
+          } catch {
+            return;
           }
-          const final = await stream.finalMessage();
-          if (final.stop_reason === "refusal") {
+
+          if (
+            data.type === "content_block_delta" &&
+            data.delta?.type === "text_delta"
+          ) {
+            controller.enqueue(encoder.encode(data.delta.text));
+          }
+          if (data.type === "message_delta" && data.delta?.stop_reason === "refusal") {
+            refused = true;
+          }
+        };
+
+        try {
+          while (true) {
+            const { value, done } = await reader.read();
+            buffer += decoder.decode(value, { stream: !done }).replace(/\r\n/g, "\n");
+
+            let boundary;
+            while ((boundary = buffer.indexOf("\n\n")) !== -1) {
+              processEvent(buffer.slice(0, boundary));
+              buffer = buffer.slice(boundary + 2);
+            }
+
+            if (done) break;
+          }
+          if (buffer.trim()) processEvent(buffer);
+          if (refused) {
             controller.enqueue(
               encoder.encode(
                 "\n\nI can't answer that one. Andres is at dretaq@gmail.com."
@@ -385,6 +428,7 @@ export default async function handler(req) {
             encoder.encode("\n\n(The answer was cut short — please try again.)")
           );
         } finally {
+          reader.releaseLock();
           controller.close();
         }
       },
@@ -399,7 +443,6 @@ export default async function handler(req) {
     });
   } catch (err) {
     console.error("chat request failed:", err);
-    const status = err instanceof Anthropic.RateLimitError ? 429 : 502;
-    return new Response("The assistant is unavailable right now.", { status });
+    return new Response("The assistant is unavailable right now.", { status: 502 });
   }
 }

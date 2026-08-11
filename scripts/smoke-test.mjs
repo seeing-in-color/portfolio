@@ -1,4 +1,3 @@
-import Anthropic from "@anthropic-ai/sdk";
 import handler from "../api/chat.js";
 
 let fails = 0;
@@ -15,12 +14,6 @@ const post = (body, ip = "1.2.3.4") =>
       body: JSON.stringify(body),
     })
   );
-
-// --- SDK surface the handler depends on -------------------------------------
-const c = new Anthropic({ apiKey: "test-not-a-real-key" });
-check("SDK imports and constructs", typeof c === "object");
-check("messages.stream exists", typeof c.messages.stream === "function");
-check("RateLimitError exported", typeof Anthropic.RateLimitError === "function");
 
 // --- guard paths (no network) ----------------------------------------------
 delete process.env.ANTHROPIC_API_KEY;
@@ -55,6 +48,27 @@ for (let i = 0; i < 20; i++) {
   if (r.status === 429) throttleHit++;
 }
 check("throttle engages after ~12 requests", throttleHit > 0, `${throttleHit} of 20 throttled`);
+
+// --- Edge-compatible upstream streaming ------------------------------------
+const originalFetch = globalThis.fetch;
+globalThis.fetch = async () =>
+  new Response(
+    [
+      'event: message_start\ndata: {"type":"message_start"}\n\n',
+      'event: content_block_delta\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":"Hello "}}\n\n',
+      'event: content_block_delta\ndata: {"type":"content_block_delta","delta":{"type":"text_delta","text":"there"}}\n\n',
+      'event: message_stop\ndata: {"type":"message_stop"}\n\n',
+    ].join(""),
+    { status: 200, headers: { "content-type": "text/event-stream" } }
+  );
+
+const streamed = await post(
+  { messages: [{ role: "user", content: "Tell me about Andres" }] },
+  "7.7.7.7"
+);
+check("streaming response returns 200", streamed.status === 200, `got ${streamed.status}`);
+check("SSE is converted to plain text", (await streamed.text()) === "Hello there");
+globalThis.fetch = originalFetch;
 
 console.log(fails === 0 ? "\nAll checks passed." : `\n${fails} check(s) failed.`);
 process.exit(fails === 0 ? 0 : 1);
