@@ -1,0 +1,14 @@
+{
+  "name": "andres-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio site for Andres Taquechel — AI Operations Specialist",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 4321",
+    "test": "node scripts/smoke-test.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.116.0"
+  }
+}
