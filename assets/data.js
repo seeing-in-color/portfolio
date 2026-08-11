@@ -16,21 +16,26 @@ export const PROFILE = {
     "I find the manual work buried inside a business and replace it with AI systems that run in production — inside the tools people already use.",
   email: "dretaq@gmail.com",
   linkedin: "https://www.linkedin.com/in/andrestaquechel/",
-  booking: "https://calendar.app.google/",
   resume: "/resume.pdf",
 
   /*
-   * Google Calendar appointment-schedule embed.
+   * Google Calendar appointment schedule "Intro call with Andres".
+   * 60-minute slots, Mon–Fri 9:00–17:00 Central, 72 hours minimum notice,
+   * and Google checks the calendar for conflicts so booked time never shows
+   * as free.
    *
-   * TO ENABLE: open your booking page in Google Calendar, copy the share link,
-   * and paste the full URL here with `?gv=true` on the end. It looks like:
-   *   https://calendar.google.com/calendar/appointments/schedules/AcZssZ...?gv=true
+   * `booking` is the plain share link (used by the Contact list and the
+   * fallback card). `bookingEmbed` is the same URL with `?gv=true`, which is
+   * what makes Google render the embeddable view inside an iframe.
    *
-   * While this is empty (or if the iframe fails to load) the booking section
-   * falls back to a styled card linking out to `booking` above — so the page
-   * never shows a broken embed.
+   * If bookingEmbed is ever blank — or the iframe fails to load within 6
+   * seconds — the booking section falls back to a styled card instead of
+   * showing a broken embed.
    */
-  bookingEmbed: "",
+  booking:
+    "https://calendar.google.com/calendar/appointments/schedules/AcZssZ1KdQiK0lpPliB9yQ-mrxsvAgbDPZrdp1U2dBS-7y8vFlQgWwrnWIps5clI5C0xUcaVIt-j1fpa",
+  bookingEmbed:
+    "https://calendar.google.com/calendar/appointments/schedules/AcZssZ1KdQiK0lpPliB9yQ-mrxsvAgbDPZrdp1U2dBS-7y8vFlQgWwrnWIps5clI5C0xUcaVIt-j1fpa?gv=true",
 };
 
 /* Marquee band under the hero. Names only — no logos, nothing to license. */

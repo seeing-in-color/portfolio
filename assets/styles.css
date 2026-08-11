@@ -1792,13 +1792,20 @@ iframe {
   min-height: 620px;
 }
 
+/* Google's booking iframe paints no background of its own, so whatever sits
+   behind it decides legibility. On the dark card its dark-theme text was
+   barely readable; a light surface makes it crisp and reads as a deliberate
+   white panel against the page. Scoped to `.is-embed` (set by JS only when
+   the iframe is actually inserted) so the dark fallback card is unaffected. */
+.book__frame.is-embed {
+  background: #ffffff;
+}
+
 .book__frame iframe {
   display: block;
   width: 100%;
   height: 660px;
   border: 0;
-  /* Google's embed is light-only; soften it so it doesn't glare in dark mode. */
-  color-scheme: light;
 }
 
 .book__fallback {

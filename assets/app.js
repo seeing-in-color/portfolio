@@ -521,15 +521,23 @@ sheet.addEventListener("keydown", (e) => {
   frame.loading = "lazy";
   frame.setAttribute("frameborder", "0");
 
-  // Google's embed doesn't report load errors cross-origin, so treat "never
-  // fired onload" as a failure and swap in the fallback.
+  // Google's embed doesn't report load errors cross-origin, so "never fired
+  // onload" is the only failure signal available. The grace period is
+  // deliberately long: the booking widget is heavy, and a short timeout
+  // showed "Calendar unavailable" on a perfectly good cold load. Better to
+  // let a slow connection finish than to lie about the calendar being down.
   let loaded = false;
+  const toFallback = () => {
+    if (loaded) return;
+    host.classList.remove("is-embed");
+    fallback("Calendar unavailable");
+  };
   frame.addEventListener("load", () => (loaded = true));
-  frame.addEventListener("error", () => fallback("Calendar unavailable"));
-  setTimeout(() => {
-    if (!loaded) fallback("Calendar unavailable");
-  }, 6000);
+  frame.addEventListener("error", toFallback);
+  setTimeout(toFallback, 20000);
 
+  // Switches the panel to a light surface — see the note in styles.css.
+  host.classList.add("is-embed");
   host.append(frame);
 })();
 
